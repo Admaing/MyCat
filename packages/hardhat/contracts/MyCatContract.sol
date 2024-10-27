@@ -169,4 +169,20 @@ contract MyCatContract is ERC721URIStorage,Ownable {
     function _sameGender(uint256 _catId1, uint256 _catId2) private view returns (bool) {
         return keccak256(abi.encodePacked(cats[_catId1].gender)) == keccak256(abi.encodePacked(cats[_catId2].gender));
     }
+    // 获取特定地址的猫咪ID列表
+function getMyCats() public view returns (Cat[] memory) {
+    console.log("msg.sender is ",msg.sender);
+    uint256 count = mintedCatsCount[msg.sender];
+    Cat[] memory myCats = new Cat[](count);
+    uint256 index = 0;
+
+    for (uint256 i = 1; i <= catCounter; i++) {
+        if (ownerOf(i) == msg.sender) {
+            myCats[index] = cats[i]; // 获取猫咪的详细信息
+            index++;
+        }
+    }
+    
+    return myCats; // 返回猫咪的详细信息
+}
 }

@@ -43,9 +43,31 @@ describe("MyCatMarketContract", function () {
     for (let i = 1; i <= 5; i++) {
       await myCatMarketContract.connect(addr1).mintCat(`Cat${i}`, "Female", `ipfs://cat${i}`);
     }
+    console.log("target",addr1.target)
+    console.log("我的猫咪有", await myCatMarketContract.connect(addr1).getMyCats());
     // 尝试铸造第6只猫咪
     await expect(myCatMarketContract.connect(addr1).mintCat("Cat6", "Female", "ipfs://cat6"))
       .to.be.revertedWith("You can only mint up to 5 cats");
+  });
+
+  it("should allow user to mint a new cat and retrieve their cat list", async function () {
+    // 使用 owner 铸造新的猫咪
+    // for (let i = 1; i <= 5; i++) {
+      const specificSigner = await ethers.getSigner("0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199");
+
+      // await myCatMarketContract.connect(specificSigner).mintCat("Whiskers", "Male", "ipfs://cat1");
+      
+      // await myCatMarketContract.connect(addr1).mintCat(`Cat${i}`, "Female", `ipfs://cat${i}`);
+    // }
+    await myCatMarketContract.connect(specificSigner).mintCat(`Whiskers`,"Male",`ipfs://cat1`);
+    // const myCats = await myCatMarketContract.connect("0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199").callStatic.getMyCats();
+    // 获取 owner 铸造的猫咪列表
+    const myCats = await myCatMarketContract.connect(specificSigner).getMyCats();
+    const catDetails = await myCatMarketContract.cats(1);
+    console.log(myCats)
+    // // 检查列表中是否包含了铸造的猫咪ID
+    // expect(myCats.length).to.equal(1);
+    // expect(myCats[0]).to.equal(1); // 第一个猫咪ID应该是 1
   });
 
   it("应该成功使用营养Token繁殖猫咪", async function () {
