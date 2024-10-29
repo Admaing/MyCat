@@ -77,7 +77,7 @@ contract MyCatContract is ERC721URIStorage,Ownable {
         _setTokenURI(newCatId, _imageURI); // 设置猫咪的URI
         mintedCatsCount[msg.sender]++;
 
-        // 触发铸造事件
+
         emit CatMinted(newCatId, _name, _gender, _imageURI, msg.sender);
     }
 

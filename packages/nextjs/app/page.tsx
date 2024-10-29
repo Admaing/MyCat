@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ethers } from "ethers";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
 import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
@@ -9,16 +10,49 @@ import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaf
 
 const Home: NextPage = () => {
   const { address: connectedAddress } = useAccount();
-  console.log("address", connectedAddress);
+  console.log("connectedAddress address", connectedAddress);
   const { data: myCat } = useScaffoldReadContract({
     contractName: "MyCatContract",
     functionName: "getMyCats",
+    // args: [connectedAddress],
   });
+  const { data: userBalance } = useScaffoldReadContract({
+    contractName: "CatToken",
+    functionName: "balanceOf",
+    args: [connectedAddress],
+  });
+  // const connectWallet = async () => {
+  //   if (window.ethereum) {
+  //     try {
+  //       // Request account access if needed
+  //       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+  //       console.log("Connected account:", accounts[0]);
+  //     } catch (error) {
+  //       console.error("User denied account access", error);
+  //     }
+  //   } else {
+  //     console.error("No Web3 provider found. Please install MetaMask.");
+  //   }
+  // };
+  // 读取写入 CatTokenFaucet 的钩子
+  const { writeContractAsync: requestTokens } = useScaffoldWriteContract("CatTokenFaucet");
+
   const { writeContractAsync: mintCat } = useScaffoldWriteContract("MyCatContract");
   const catName = "Kittyww"; // 设置猫咪的名称，可以根据需要动态传入
   const catGender = "Female"; // 设置猫咪的性别，可以根据需要动态传入
   const catImageURI = "http://example.com/kitty.png"; // 设置猫咪的图像URI，可以根据需要动态传入
   console.log("mycat", myCat);
+  const handleRequestTokens = async () => {
+    try {
+      await requestTokens({
+        functionName: "requestTokens",
+      });
+      console.log("Tokens requested successfully");
+    } catch (e) {
+      console.error("Error requesting tokens:", e);
+    }
+  };
+
   return (
     <>
       <div className="flex items-center flex-col flex-grow pt-10">
@@ -49,6 +83,23 @@ const Home: NextPage = () => {
             </code>
           </p>
         </div>
+        {/* 新增水龙头按钮 */}
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold text-center">CatToken Faucet</h2>
+          <button className="btn btn-primary" onClick={handleRequestTokens}>
+            Request Tokens
+          </button>
+        </div>
+        {/* 显示用户的 CatToken 余额 */}
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold text-center">My CatToken Balance</h2>
+          <p className="text-center mt-4">
+            {userBalance !== undefined
+              ? ethers.parseUnits(userBalance.toString(), 18).toString()
+              : "Loading balance..."}
+          </p>
+        </div>
+
         {/* 显示猫咪总数量或列表 */}
         <div className="mt-8">
           <h2 className="text-2xl font-bold text-center">My Cats</h2>

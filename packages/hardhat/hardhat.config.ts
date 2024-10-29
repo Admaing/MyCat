@@ -11,8 +11,7 @@ import "hardhat-deploy";
 import "hardhat-deploy-ethers";
 
 // If not set, it uses the hardhat account 0 private key.
-const deployerPrivateKey =
-  process.env.DEPLOYER_PRIVATE_KEY ?? "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+const deployerPrivateKey = "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
 // If not set, it uses ours Etherscan default API key.
 const etherscanApiKey = process.env.ETHERSCAN_API_KEY || "DNXJA8RX2Q3VZ4URQIWP7Z68CJXQZSC6AW";
 // forking rpc url
@@ -48,6 +47,10 @@ const config: HardhatUserConfig = {
         url: forkingURL,
         enabled: process.env.MAINNET_FORKING_ENABLED === "true",
       },
+    },
+    test: {
+      url: `http://127.0.0.1:8545`,
+      accounts: [deployerPrivateKey],
     },
     mainnet: {
       url: `https://cloudflare-eth.com`,
