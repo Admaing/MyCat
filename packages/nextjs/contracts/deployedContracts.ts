@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     CatToken: {
-      address: "0x1ACcBD355245AbA93CE46D33ab1D0152CE33Fd00",
+      address: "0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690",
       abi: [
         {
           inputs: [
@@ -460,7 +460,7 @@ const deployedContracts = {
       },
     },
     CatTokenFaucet: {
-      address: "0xC5888275e0a1ca13a26463318105957aa4d1feD7",
+      address: "0x84eA74d481Ee0A5332c457a4d796187F6Ba67fEB",
       abi: [
         {
           inputs: [
@@ -651,7 +651,7 @@ const deployedContracts = {
       },
     },
     MyCatContract: {
-      address: "0x87B6a0ab90d826189cC004Dc2ff16E2b472309db",
+      address: "0x9E545E3C0baAB3E08CdfD552C960A1050f373042",
       abi: [
         {
           inputs: [

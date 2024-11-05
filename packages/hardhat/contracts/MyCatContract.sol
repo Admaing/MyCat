@@ -2,11 +2,12 @@
 pragma solidity >=0.8.0 <0.9.0;
 
 // Useful for debugging. Remove when deploying to a live network.
-import "hardhat/console.sol";
+
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "hardhat/console.sol";
 // Use openzeppelin to inherit battle-tested implementations (ERC20, ERC721, etc)
 // import "@openzeppelin/contracts/access/Ownable.sol";
 
@@ -72,7 +73,7 @@ contract MyCatContract is ERC721URIStorage,Ownable {
             gender: _gender,
             imageURI: _imageURI
         });
-
+        console.log("cat id is  ",newCatId);
         cats[newCatId] = newCat; // 保存猫咪信息
         _setTokenURI(newCatId, _imageURI); // 设置猫咪的URI
         mintedCatsCount[msg.sender]++;
@@ -87,14 +88,14 @@ contract MyCatContract is ERC721URIStorage,Ownable {
         require(ownerOf(_catId1) == msg.sender, "You must own the first cat");
         require(ownerOf(_catId2) == msg.sender, "You must own the second cat");
         require(!_sameGender(_catId1, _catId2), "Cats must be of different genders"); // 确保两只猫咪性别不同
-
         // 转移营养Token用于支付繁殖费用
-        require(nutritionToken.transferFrom(msg.sender, address(this), breedingCostInToken), "Insufficient nutrition tokens for breeding");
-
+        console.log("cat id is  ",breedingCostInToken);
+         require(nutritionToken.transferFrom(msg.sender, address(this), breedingCostInToken), "Insufficient nutrition tokens for breeding");
+        
         catCounter++; // 增加猫咪计数器
         uint256 newCatId = catCounter; // 新猫咪的ID
         _mint(msg.sender, newCatId); // 铸造新猫咪NFT
-
+        console.log("cat id is  ",breedingCostInToken);
         // 创建新的Cat结构体并存储其信息
         Cat memory newCat = Cat({
             id: newCatId,

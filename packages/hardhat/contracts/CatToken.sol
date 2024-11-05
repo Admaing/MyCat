@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract CatToken is ERC20, Ownable {
     // 构造函数：初始化代币并给部署者分配初始供应量，并将initialOwner传递给Ownable
-    constructor(string memory name, string memory symbol, uint256 initialSupply) ERC20(name, symbol) Ownable(msg.sender) {
+    constructor(string memory name, string  memory symbol, uint256 initialSupply) ERC20(name, symbol) Ownable(msg.sender) {
         _mint(msg.sender, initialSupply);
     } 
 

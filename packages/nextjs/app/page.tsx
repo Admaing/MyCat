@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { ethers } from "ethers";
 import type { NextPage } from "next";
@@ -21,6 +22,24 @@ const Home: NextPage = () => {
     functionName: "balanceOf",
     args: [connectedAddress],
   });
+  // const { address: connectedAddress } = useAccount();
+  const [catId1, setCatId1] = useState("");
+  const [catId2, setCatId2] = useState("");
+  const [newCatName, setNewCatName] = useState("");
+  const [newCatImageURI, setNewCatImageURI] = useState("");
+  const { writeContractAsync: breedCats } = useScaffoldWriteContract("MyCatContract");
+
+  const handleBreedCats = async () => {
+    try {
+      await breedCats({
+        functionName: "breedCats",
+        args: [BigInt(catId1), BigInt(catId2), newCatName, newCatImageURI],
+      });
+      console.log("Cats bred successfully");
+    } catch (e) {
+      console.error("Error breeding cats:", e);
+    }
+  };
   // const connectWallet = async () => {
   //   if (window.ethereum) {
   //     try {
@@ -35,23 +54,23 @@ const Home: NextPage = () => {
   //   }
   // };
   // 读取写入 CatTokenFaucet 的钩子
-  const { writeContractAsync: requestTokens } = useScaffoldWriteContract("CatTokenFaucet");
+  // const { writeContractAsync: requestTokens } = useScaffoldWriteContract("CatTokenFaucet");
 
   const { writeContractAsync: mintCat } = useScaffoldWriteContract("MyCatContract");
   const catName = "Kittyww"; // 设置猫咪的名称，可以根据需要动态传入
-  const catGender = "Female"; // 设置猫咪的性别，可以根据需要动态传入
-  const catImageURI = "http://example.com/kitty.png"; // 设置猫咪的图像URI，可以根据需要动态传入
+  const catGender = Math.random() < 0.5 ? "male" : "female"; // 设置猫咪的性别，可以根据需要动态传入
+  const catImageURI = "https://cdn.pixabay.com/photo/2016/11/04/03/20/cat-1796834_640.jpg"; // 设置猫咪的图像URI，可以根据需要动态传入
   console.log("mycat", myCat);
-  const handleRequestTokens = async () => {
-    try {
-      await requestTokens({
-        functionName: "requestTokens",
-      });
-      console.log("Tokens requested successfully");
-    } catch (e) {
-      console.error("Error requesting tokens:", e);
-    }
-  };
+  // const handleRequestTokens = async () => {
+  //   try {
+  //     await requestTokens({
+  //       functionName: "requestTokens",
+  //     });
+  //     console.log("Tokens requested successfully");
+  //   } catch (e) {
+  //     console.error("Error requesting tokens:", e);
+  //   }
+  // };
 
   return (
     <>
@@ -84,12 +103,12 @@ const Home: NextPage = () => {
           </p>
         </div>
         {/* 新增水龙头按钮 */}
-        <div className="mt-8">
+        {/* <div className="mt-8">
           <h2 className="text-2xl font-bold text-center">CatToken Faucet</h2>
           <button className="btn btn-primary" onClick={handleRequestTokens}>
             Request Tokens
           </button>
-        </div>
+        </div> */}
         {/* 显示用户的 CatToken 余额 */}
         <div className="mt-8">
           <h2 className="text-2xl font-bold text-center">My CatToken Balance</h2>
@@ -100,6 +119,49 @@ const Home: NextPage = () => {
           </p>
         </div>
 
+        <h2 className="text-2xl font-bold text-center mt-8">Breed Cats</h2>
+        <div className="flex flex-col items-center mt-4 space-y-4">
+          {/* 选择猫咪1的下拉菜单 */}
+          <input
+            type="text"
+            value={catId1}
+            onChange={e => setCatId1(e.target.value)}
+            placeholder="Enter First Cat ID"
+            className="input input-bordered"
+          />
+
+          {/* 第二只猫咪的手动输入框 */}
+          <input
+            type="text"
+            value={catId2}
+            onChange={e => setCatId2(e.target.value)}
+            placeholder="Enter Second Cat ID"
+            className="input input-bordered"
+          />
+
+          {/* 输入新猫咪的名字 */}
+          <input
+            type="text"
+            placeholder="New Cat Name"
+            value={newCatName}
+            onChange={e => setNewCatName(e.target.value)}
+            className="input input-bordered"
+          />
+
+          {/* 输入新猫咪的图片 URI */}
+          <input
+            type="text"
+            placeholder="New Cat Image URI"
+            value={newCatImageURI}
+            onChange={e => setNewCatImageURI(e.target.value)}
+            className="input input-bordered"
+          />
+
+          {/* 繁殖按钮 */}
+          <button className="btn btn-primary mt-4" onClick={handleBreedCats}>
+            Breed Cats
+          </button>
+        </div>
         {/* 显示猫咪总数量或列表 */}
         <div className="mt-8">
           <h2 className="text-2xl font-bold text-center">My Cats</h2>
